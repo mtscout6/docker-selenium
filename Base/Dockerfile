@@ -1,11 +1,12 @@
-FROM ubuntu:14.04
+FROM java:openjdk-7-jre
+#FROM ubuntu:14.04
 MAINTAINER Selenium <selenium-developers@googlegroups.com>
 
 #================================================
 # Customize sources for apt-get
 #================================================
-RUN  echo "deb http://archive.ubuntu.com/ubuntu trusty main universe\n" > /etc/apt/sources.list \
-  && echo "deb http://archive.ubuntu.com/ubuntu trusty-updates main universe\n" >> /etc/apt/sources.list
+RUN  echo "deb http://http.debian.net/debian jessie main\n" > /etc/apt/sources.list \
+  && echo "deb http://http.debian.net/debian jessie-updates main\n" >> /etc/apt/sources.list
 
 #========================
 # Miscellaneous packages
@@ -14,9 +15,6 @@ RUN  echo "deb http://archive.ubuntu.com/ubuntu trusty main universe\n" > /etc/a
 RUN apt-get update -qqy \
   && apt-get -qqy --no-install-recommends install \
     ca-certificates \
-    openjdk-7-jre-headless \
-    unzip \
-    wget \
   && rm -rf /var/lib/apt/lists/*
 
 #==========
@@ -28,7 +26,7 @@ RUN  mkdir -p /opt/selenium \
 #========================================
 # Add normal user with passwordless sudo
 #========================================
-RUN sudo useradd seluser --shell /bin/bash --create-home \
-  && sudo usermod -a -G sudo seluser \
+RUN useradd seluser --shell /bin/bash --create-home \
+  && usermod -a -G sudo seluser \
   && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
   && echo 'seluser:secret' | chpasswd
